@@ -9,7 +9,23 @@
 
 #once I get the subtree
 
-# script to feed the occurance data of the GWS from obis
+# finding all the latitude and longitude points of the GWS locations from OBIS
+import csv
+
+f = open('carcharodon.csv')
+
+csv_f = csv.reader(f)
+
+latitudes = []
+longitudes = []
+
+for column in csv_f:
+    latitudes.append(column[6])
+    longitudes.append(column[7])
+
+print str(latitudes)
+print str(longitudes)  
+
 
 # plot the data points using matplotlib
 #diff color for each species
