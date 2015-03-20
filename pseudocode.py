@@ -84,9 +84,9 @@ tree <- read.tree("shark.tree")
 #this defines the BAMMdata object using event_data.txt
 edata <- getEventData(tree, eventdata = "event_data.txt", burnin=0.1) #event_data.txt file should be automatically made after you run BAMM
 edata2 <- subsetEventData(edata, index = 1:20) #subsets the eventdata
-#This allows you to calculate the speciation rate for each Tip of your phylogenetic tree
+#This returns a vector of average species-specific speciation rates for each Tip of your phylogenetic tree. 
 meanlam <- getTipRates(edata, returnNetDiv = FALSE, statistic = 'mean')$lambda.avg
-meanlam #prints all the speciation rates for each tip
+meanlam #prints the average species-specific speciation rates for each tip
 
 #To Plot speciation rate
 #This calculates the Mean Branch Length speciation rate for your tree file
