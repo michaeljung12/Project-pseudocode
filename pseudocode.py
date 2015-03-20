@@ -50,17 +50,18 @@ cleaned3 <- na.omit(coor3)
 coor4 = whiteshark_func('occurrence4.txt')
 cleaned4 <- na.omit(coor4)
 
-# finding all the latitude and longitude points of the GWS locations from OBIS
+#Now I will plot the latitude and longitude points onto a world map for the 5 species 
+#Still using R Studio for this, and these are the packages I used to plot the points
+library (maps)
+library (mapdata)
 
-
-
-# plot the data points using matplotlib
-# diff color for each species
-# script not finished yet
-# need to add script for using diff color for each species
-# also need to finish looping the request from OBIS/GBIF to plot all points for all species
-
-
+sharkmap <- map('worldHires') #makes an empty and basic worldmap
+#this next part plots the cleaned Latitude and Longitude points from the 5 species above onto the map, with different colors for each
+points(cleaned$decimalLongitude, cleaned$decimalLatitude, col = "red", cex = .3)
+points(cleaned4$decimalLongitude, cleaned4$decimalLatitude, col = "blue", cex = .3)
+points(cleaned3$decimalLongitude, cleaned3$decimalLatitude, col = "green", cex = .3)
+points(cleaned2$decimalLongitude, cleaned2$decimalLatitude, col = "orange", cex = .3)
+points(cleaned1$decimalLongitude, cleaned1$decimalLatitude, col = "yellow", cex = .3)
 
 
 # calc and plot speciation rates
