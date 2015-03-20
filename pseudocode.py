@@ -63,5 +63,38 @@ points(cleaned3$decimalLongitude, cleaned3$decimalLatitude, col = "green", cex =
 points(cleaned2$decimalLongitude, cleaned2$decimalLatitude, col = "orange", cex = .3)
 points(cleaned1$decimalLongitude, cleaned1$decimalLatitude, col = "yellow", cex = .3)
 
+#This next part calculates and plots the speciation rates
+#I used BAMM (Bayesian Analysis of Macoevolutionary Mixtures) to analyze the phylogenetic tree and calculate and plot speciation rates
+#You must first download BAMM and set up your control file
+#Set the working directory to where you downloaded BAMM
+setwd("~/tree_stuff/bamm/build")
+sharktree <- read.tree("shark.tree") #read the tree
+#set the BAMMpriors for the control file that is specific to your phylogenetic tree to run it with the optimal settings
+setBAMMpriors(sharktree) 
 
-# calc and plot speciation rates
+#Now, you cannot run BAMM on vagrant and have to run it on your local directory in your terminal
+setwd(/usr/local/bin/tempsharks) #set working directory to local bin in a folder with your control file and all the info
+bamm -c myControlfile.txt #this runs BAMM onto your control file; you specify your tree file in the control file
+
+#After you run bamm, you can use the BAMMtools package on R Studio to calculate and plot speciation rates
+library(BAMMtools)
+#set working directory to where all your files are
+setwd("~/tree_stuff/shark_bamm")
+tree <- read.tree("shark.tree")
+#this defines the BAMMdata object using event_data.txt
+edata <- getEventData(tree, eventdata = "event_data.txt", burnin=0.1) #event_data.txt file should be automatically made after you run BAMM
+edata2 <- subsetEventData(edata, index = 1:20) #subsets the eventdata
+#This allows you to calculate the speciation rate for each Tip of your phylogenetic tree
+meanlam <- getTipRates(edata, returnNetDiv = FALSE, statistic = 'mean')$lambda.avg
+meanlam #prints all the speciation rates for each tip
+
+#To Plot speciation rate
+#This calculates the Mean Branch Length speciation rate for your tree file
+ratetree <- getMeanBranchLengthTree(edata2, rate='speciation')
+#Plots a phylogenetic tree, topologically identical to the model tree 
+#but with branch lengths replaced by the mean (marginal) rates on each branch as estimated from the posterior samples in the bammdata object.
+plot(ratetree$phy, show.tip.label=FALSE)
+#This makes a phylorate plot showing speciation rates along each branch of the shark phylogenetic tree
+#cool colors = slow, warm = fast
+plot.bammdata(edata, lwd=2, method="polar", pal="temperature")
+#Each unique color section of a branch represents the mean of the marginal posterior density of speciation rates on a localized segment of your phylogenetic tree
